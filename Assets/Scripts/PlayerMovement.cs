@@ -4,35 +4,30 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Animator animator;
     public float moveSpeed = 5f;
+    float speedX, speedY;
     public GameObject projectilePrefab;
     public float projectileSpeed = 10f;
-
+    public bool isDashing = false;
 
     private Vector2 moveInput;
-    private Rigidbody2D rb;
+    Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        moveInput.x = Input.GetAxis("Horizontal");
-        moveInput.y = Input.GetAxis("Vertical");
+        speedX = Input.GetAxisRaw("Horizontal") * moveSpeed;
+        speedY = Input.GetAxisRaw("Vertical") * moveSpeed;
+        rb.velocity = new Vector2(speedX, speedY);
+        float totSpeed = rb.velocity.magnitude;
 
-        if (Input.GetButtonDown("Fire1"))
-        {
-            ShootProjectile();
-        }
+        animator.SetFloat("speed", totSpeed);
     }
-
-    void FixedUpdate()   
-        {
-            rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
-        }
 
     void ShootProjectile()
     {
@@ -41,4 +36,5 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = transform.up * projectileSpeed;
     }
     
+
 }
